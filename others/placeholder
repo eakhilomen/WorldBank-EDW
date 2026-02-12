@@ -1,1 +1,19 @@
+WorldBank-EDW/
+│
+├── data/
+│   ├── raw/
+│   ├── cleaned/
+│
+├── sql/
+│   ├── staging/
+│   ├── dimensions/
+│   ├── facts/
+│
+├── powerbi/
+│   └── dashboard.pbix
+│
+├── docs/
+│   └── architecture-diagram.png
+│
+└── README.md
 
