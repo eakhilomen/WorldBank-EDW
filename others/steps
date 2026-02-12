@@ -1,1 +1,206 @@
+1) Banking story you’re telling with WDI
 
+Goal: “How macroeconomic conditions impact credit risk and lending strategy across countries/regions over time.”
+
+You’ll answer:
+
+Which countries are becoming riskier (inflation ↑, FX volatility ↑, GDP growth ↓)?
+
+Where is consumer stress rising (unemployment ↑)?
+
+Which regions show strong recovery (GDP ↑, inflation stabilizing)?
+
+How do these signals change pre vs post shock (e.g., 2008, 2020)?
+
+2) Pick 10–15 WDI indicators (bank-relevant)
+
+Use these as your “macro risk factors”:
+
+Growth
+
+GDP growth (annual %)
+
+GDP (current US$) (optional)
+
+Inflation / Prices
+
+Inflation, consumer prices (annual %)
+
+Labor / Stress
+
+Unemployment, total (% of labor force)
+
+Rates / Credit conditions
+
+Lending interest rate (%)
+
+Deposit interest rate (%) (if available)
+
+FX / External
+
+Official exchange rate (LCU per US$, period average)
+
+Current account balance (% of GDP)
+
+Debt / Government risk
+
+Central government debt (% of GDP) (if available in WDI)
+
+Total reserves (includes gold, current US$) (optional)
+
+Population (for per-capita normalization)
+
+Population, total
+
+That’s enough to build a realistic “risk dashboard”.
+
+3) Data Warehouse design (Bronze–Silver–Gold)
+Bronze (raw landing)
+
+Table: bronze_wdi_raw
+
+Keep it exactly as downloaded (including wide year columns if that’s how you get it).
+
+Add metadata columns:
+
+load_datetime
+
+source = 'WorldBank WDI'
+
+file_name
+
+Silver (clean + standardized)
+
+Table: silver_wdi_long
+Convert wide → long:
+
+Columns:
+
+country_name
+
+country_code
+
+indicator_name
+
+indicator_code
+
+year
+
+value
+
+load_datetime
+
+Cleaning rules:
+
+Convert year to INT
+
+Convert value to DECIMAL
+
+Remove nulls where value is missing
+
+Standardize country codes
+
+Gold (banking analytics model)
+
+Create a star schema:
+
+Dimensions
+
+dim_country (country_code, country_name, region, income_group)
+
+dim_indicator (indicator_code, indicator_name, banking_category)
+
+dim_date (year, decade, period buckets)
+
+Facts
+
+fact_macro (country_code, indicator_code, year, value)
+
+Analytics marts (Gold+)
+
+fact_macro_yoy (YoY change, rolling avg)
+
+fact_risk_index (composite risk score per country-year)
+
+4) Risk Index (the “bank-style” differentiator)
+
+Build a simple composite score:
+
+Example components (normalize each to 0–100 using percentile or z-score):
+
+Inflation (higher = worse)
+
+Unemployment (higher = worse)
+
+GDP growth (lower = worse)
+
+FX depreciation (higher = worse)
+
+Risk Index = weighted sum
+
+Inflation 30%
+
+Unemployment 25%
+
+GDP growth 25%
+
+FX change 20%
+
+This single metric makes your project look like a real bank risk dashboard.
+
+5) Power BI dashboard layout (bank executive style)
+Page 1 — Executive Macro Risk Overview
+
+KPI Cards: Avg Risk Index, #Countries High Risk, GDP Growth Avg, Inflation Avg
+
+Map: Risk Index by Country (color gradient)
+
+Trend line: Risk Index over time (global + selected country)
+
+Top/Bottom 10: countries by Risk Index
+
+Page 2 — Country Risk Profile (Drillthrough)
+
+Selected Country KPIs (Inflation, Unemployment, GDP growth, FX change)
+
+4-line trend small multiples (each indicator over time)
+
+“Risk Drivers” bar chart (which indicator contributes most)
+
+Page 3 — Indicator Deep Dive
+
+Slicer: choose indicator
+
+Heatmap: country vs year (value)
+
+Rank trend: top 10 countries for that indicator
+
+Page 4 — Regional Comparison
+
+Region slicer
+
+Boxplot/Distribution (or percentile bar) by region
+
+Trend lines by region (GDP, inflation, unemployment)
+
+Page 5 — Shock Analysis (2008 / 2020)
+
+Buttons/bookmarks: “2008 Crisis”, “COVID”
+
+Before vs After comparison (avg values)
+
+Countries most impacted (delta ranking)
+
+6) What to write in your README (interview gold)
+
+Include:
+
+Business objective (bank macro monitoring)
+
+Data source (World Bank WDI)
+
+Architecture (Bronze/Silver/Gold)
+
+KPI definitions (Risk Index formula)
+
+Dashboard screenshots
