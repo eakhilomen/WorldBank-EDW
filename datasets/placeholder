@@ -1,4 +1,21 @@
-https://databank.worldbank.org/source/world-development-indicators?utm_source=chatgpt.com#
-
-WorldBank-EDW/datasets/raw/wdi_macro_raw.csv
-
+WorldBank-EDW/
+│
+├── datasets/
+│   ├── raw/
+│   │   └── wdi_macro_raw.csv
+│   └── sample_output/        
+│
+├── sql/
+│   ├── 01_bronze_create.sql
+│   ├── 02_silver_unpivot.sql
+│   ├── 03_gold_dimensions.sql
+│   ├── 04_gold_fact.sql
+│   ├── 05_risk_index.sql
+│
+├── powerbi/
+│   └── WorldBank_Macro_Risk.pbix
+│
+├── documents/
+│   └── architecture_diagram.png
+│
+└── README.md
